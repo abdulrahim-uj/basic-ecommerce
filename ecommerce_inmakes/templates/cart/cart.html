@@ -1,0 +1,125 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block meta_description %}
+    Cart Details
+{% endblock %}
+
+{% block title %}
+    Cart - ABC Store
+{% endblock %}
+
+{% block content %}
+    {% if not cartitems %}
+        <div>
+            <div class="text-center">
+                <br />
+                <h1 class="text-center my-title">Your cart is empty</h1>
+                <br />
+                <p class="text-center">Please click
+                    <a href="{% url 'shop:allprodcat' %}">here</a> to continue</p>
+            </div>
+        </div>
+    {% else %}
+        <div>
+            <div class="text-center">
+                <br />
+                <h1 class="text-center my-title">Your cart</h1>
+                <br />
+            </div>
+        </div>
+
+        <div class="row mx-auto">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+                <table class="table my-table">
+                    <thead class="my-thead">
+                        <tr>
+                            <th colspan="5">
+                                Your Items
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cartitem in cartitems %}
+                        <tr>
+                            <td>
+                                <a href="cartitem.product.get_absolute_url">
+                                    <img src="{{cartitem.product.image.url}}"
+                                         alt="{{cartitem.product.name}}"
+                                         class="float-left rounded custom-image" />
+                                </a>
+                            </td>
+                            <td class="text-left">
+                                {{cartitem.product.name}}
+                                <br />
+                                SKU: {{cartitem.product.id}}
+                                <br />
+                                Price: ${{cartitem.product.price}}
+                                <br />
+                                Qty: {{cartitem.quantity}} x $ {{cartitem}}
+                            </td>
+                            <td>
+                                $ {{cartitem.sub_total}}
+                            </td>
+                            {% if cartitem.quantity < cartitem.product.stock %}
+                                <td>
+                                    <a href="{% url 'cart:add_cart' cartitem.product.id %}"
+                                        class="custom-a">
+                                        <i class="fa fa-plus custom-icon"></i>
+                                    </a>&nbsp;
+                                    <a
+                                        href="{% url 'cart:cart_item_remove' cartitem.product.id %}"
+                                        class="custom-a">
+                                        <i class="fa fa-minus custom-icon"></i>
+                                    </a>
+                                    <a href="{% url 'cart:cart_clear' cartitem.product.id %}"
+                                        class="custom-a">
+                                        <i class="fa fa-trash custom-icon"></i>
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{% url 'cart:cart_item_remove' cartitem.product.id %}"
+                                        class="custom-a">
+                                        <i class="fa fa-minus custom-icon"></i>
+                                    </a>
+                                    <a href="{% url 'cart:cart_clear' cartitem.product.id %}"
+                                        class="custom-a">
+                                        <i class="fa fa-trash custom-icon"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+                <table class="table my-table">
+                    <thead class="my-thead">
+                        <tr>
+                            <th>Checkout</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Please review your items before proceeding with the payment.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                Your total is <strong>$ {{total}}</strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mx-auto">
+                    <a href="{% url 'shop:allprodcat' %}" class="btn btn-secondary btn-block my-button">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

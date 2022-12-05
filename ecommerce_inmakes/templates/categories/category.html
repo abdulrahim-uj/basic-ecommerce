@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block meta_description %}
+    {% if category %}
+        {{category.description | truncatewords:160}}
+    {% else %}
+        Welcome to ABC stall where you can buy different items ...
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{category.name}}| ABC store
+    {% else %}
+        New collections | ABC store
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+        <div>
+            <div row my-row>
+                <div class="mx-auto">
+                    <p><a href="{% url 'shop:allprodcat' %}">All Products</a></p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="mx-auto">
+        {% if category %}
+            <img class="my-image" src="{{category.image.url}}" alt="{{category.name}}"/>
+    </div>
+    <br/>
+    <div>
+        <h1 class="text-center my-title">{{category.name}}</h1>
+        <p class="text-justify">{{category.description}}</p>
+    </div>
+        {% else %}
+            <div>
+                <img class="my-image image-padding" src="{% static 'header/grocery-banner.png' %}"
+                     alt="header-banner" style="width: 100%;"/>
+            </div>
+            <br/>
+            <div>
+                <h1 class="text-center my-title">Our products collection</h1>
+                <p class="text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
+                    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
+                    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis</p>
+            </div>
+        {% endif %}
+    <div class="container">
+        <div class="row mx-auto">
+<!--             PAGINATOR -->
+            {% for product in products.object_list %}
+                <div class="my-bottom-margin col-9 col-sm-12 col-md-4 col-lg-4">
+                    <div class="card text-center" style="min-width: 18rem;">
+                        <a href="{{product.get_url}}">
+                            <img class="card-img-top my-image" src="{{product.image.url}}" alt="{{product.name}}" />
+                        </a>
+                        <div class="card-body">
+                            <h4>{{product.name}}</h4>
+                            <h5>{{product.price}}</h5>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mx-auto">
+            {% if products.paginator.num_pages > 1 %}
+                <div class="text-center">
+                {% for page in products.paginator.page_range %}
+                    <a href="?page={{page}}" class="btn btn-primary btn-sm
+                     {% if products.number == page %} active {% endif %}">{{page}}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <hr />
+
+        </div>
+        <br />
+    </div>
+{% endblock %}
